@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.14.3 on linux)" generated="2026-04-27T11:45:42.979309" rpa="false" schemaversion="5">
+<suite id="s1" name="E2E Test" source="/app/e2e_test.robot">
+<test id="s1-t1" name="Customer Can Search and View a Product" line="9">
+<kw name="New Browser" owner="Browser">
+<msg time="2026-04-27T11:45:43.049655" level="INFO">{"browser": "chromium", "headless": true, "chromiumSandbox": false, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "tracesDir": "/app/results/browser/traces/temp/e98fe8a5-857d-4c1f-85d8-f8af92545a5d"}</msg>
+<msg time="2026-04-27T11:45:43.190519" level="INFO">Starting Browser process /home/pwuser/.venv/lib/python3.14/site-packages/Browser/wrapper/index.js using at 127.0.0.1:40121</msg>
+<msg time="2026-04-27T11:45:43.607412" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":true,"chromiumSandbox":false,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"tracesDir":"/app/results/browser/traces/temp/e98fe8a5-857d-4c1f-85d8-f8af92545a5d"}</msg>
+<arg>chromium</arg>
+<arg>headless=True</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<status status="PASS" start="2026-04-27T11:45:43.049339" elapsed="0.558187"/>
+</kw>
+<kw name="New Context" owner="Browser">
+<msg time="2026-04-27T11:45:43.608456" level="INFO">{
+  "acceptDownloads": true,
+  "bypassCSP": false,
+  "forcedColors": "none",
+  "ignoreHTTPSErrors": false,
+  "javaScriptEnabled": true,
+  "offline": false,
+  "reducedMotion": "no-preference",
+  "serviceWorkers": "allow",
+  "viewport": {
+    "height": 1080,
+    "width": 1920
+  }
+}</msg>
+<msg time="2026-04-27T11:45:43.613606" level="INFO">Successfully created context. </msg>
+<msg time="2026-04-27T11:45:43.613661" level="INFO">{'acceptDownloads': True, 'bypassCSP': False, 'forcedColors': 'none', 'ignoreHTTPSErrors': False, 'javaScriptEnabled': True, 'offline': False, 'reducedMotion': 'no-preference', 'serviceWorkers': 'allow', 'viewport': {'height': 1080, 'width': 1920}}</msg>
+<arg>viewport={'width': 1920, 'height': 1080}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new BrowserContext with specified options.</doc>
+<status status="PASS" start="2026-04-27T11:45:43.607675" elapsed="0.006031"/>
+</kw>
+<kw name="New Page" owner="Browser">
+<msg time="2026-04-27T11:45:48.437672" level="INFO">Successfully initialized new page object and opened url: https://juice-shop-104226998836.us-central1.run.app</msg>
+<arg>${BASE_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-04-27T11:45:43.613821" elapsed="4.824012"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-04-27T11:45:48.438257" level="INFO">Clicks the element 'button[aria-label="Close Welcome Banner"]'.</msg>
+<arg>button[aria-label="Close Welcome Banner"]</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-04-27T11:45:48.437955" elapsed="0.855179"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-04-27T11:45:49.293525" level="INFO">Clicks the element 'a[aria-label="dismiss cookie message"]'.</msg>
+<arg>a[aria-label="dismiss cookie message"]</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-04-27T11:45:49.293253" elapsed="0.030207"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-04-27T11:45:49.323832" level="INFO">Clicks the element 'id=searchQuery'.</msg>
+<arg>id=searchQuery</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-04-27T11:45:49.323580" elapsed="0.033122"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-04-27T11:45:49.357069" level="INFO">Fills the text 'Apple' in the given field.</msg>
+<arg>css=#searchQuery input</arg>
+<arg>Apple</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-04-27T11:45:49.356816" elapsed="0.131348"/>
+</kw>
+<kw name="Press Keys" owner="Browser">
+<arg>css=#searchQuery input</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" start="2026-04-27T11:45:49.488283" elapsed="0.008903"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-04-27T11:45:49.785843" level="INFO">Waited for Element with selector text=Apple Juice at state visible</msg>
+<arg>text=Apple Juice</arg>
+<arg>visible</arg>
+<arg>timeout=10s</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-04-27T11:45:49.497271" elapsed="0.288663"/>
+</kw>
+<kw name="Get Text" owner="Browser">
+<msg time="2026-04-27T11:45:49.800269" level="INFO">Text: 'This website uses fruit cookies to ensure you get the juiciest tracking experience. But me wait!\nMe want it!\nmenu\nOWASP Juice Shop\nclose\nsearch\naccount_circle\nAccount\nlanguage\nEN\nSearch Results - Apple\nApple Juice (1000ml)\n1.99¤\nApple Pomace\n0.89¤\nItems per page:\n12\n1 – 2 of 2\nLanguage has been changed to English\nForce page reload'</msg>
+<arg>body</arg>
+<arg>*=</arg>
+<arg>Apple Juice</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-04-27T11:45:49.786037" elapsed="0.014296"/>
+</kw>
+<msg time="2026-04-27T11:45:49.803547" level="INFO">Switching context to context=18346e3c-4260-4dfd-b8f3-c7b91e284c1c in CURRENT</msg>
+<msg time="2026-04-27T11:45:49.804973" level="INFO">Successfully changed active context: context=18346e3c-4260-4dfd-b8f3-c7b91e284c1c</msg>
+<msg time="2026-04-27T11:45:49.808823" level="INFO">Successfully closed Context</msg>
+<doc>Verifies a user can load the site, dismiss popups, and search for juice.</doc>
+<status status="PASS" start="2026-04-27T11:45:43.048901" elapsed="6.751534"/>
+</test>
+<doc>E2E UI Testing with BrowserLibrary</doc>
+<status status="PASS" start="2026-04-27T11:45:42.980115" elapsed="6.829008"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="E2E Test" id="s1" pass="1" fail="0" skip="0">E2E Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
