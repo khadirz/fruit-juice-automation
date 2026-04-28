@@ -1,0 +1,9 @@
+# Ignore Virtual Environments
+.venv/
+
+# Ignore Robot Framework Logs
+results/
+*.html
+*.xml
+playwright-log.txt
+browser/
