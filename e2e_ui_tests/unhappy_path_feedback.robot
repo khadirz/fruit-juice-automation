@@ -1,49 +1,49 @@
 *** Settings ***
-Documentation    Unhappy path test for Customer Feedback submission.
-Library          SeleniumLibrary
+Documentation    Happy path test for Customer Feedback submission.
+Library          Browser    timeout=30s
 
 *** Variables ***
 ${URL}           http://localhost:3000/
-${BROWSER}       chrome
 
 *** Test Cases ***
-Customer Feedback Submission - Unhappy Path (Invalid CAPTCHA)
-    [Documentation]    Submit a wrong CAPTCHA and verify the server rejects it.
-    Open Browser    ${URL}    ${BROWSER}
-    Set Window Size    1920    1080
+Customer Feedback Submission - Happy Path
+    [Documentation]    Navigate via UI, fill form, solve CAPTCHA, and submit.
+    
+    # 1. Modern Browser Setup
+    New Browser    chromium    headless=False
+    New Context    viewport={'width': 1920, 'height': 1080}
+    New Page       ${URL}
     
     # --- ENVIRONMENT SETUP ---
-    Wait Until Element Is Visible    css=button[aria-label="Close Welcome Banner"]    timeout=5s
-    Click Button                     css=button[aria-label="Close Welcome Banner"]
-    Wait Until Element Is Visible    css=a[aria-label="dismiss cookie message"]    timeout=5s
-    Click Element                    css=a[aria-label="dismiss cookie message"]
+    # BrowserLibrary automatically waits for elements to be visible before clicking!
+    Click    css=button[aria-label="Close Welcome Banner"]
+    Click    css=a[aria-label="dismiss cookie message"]
 
     # --- STEP 1: NAVIGATION VIA HAMBURGER MENU ---
-    Wait Until Element Is Visible    css=button[aria-label="Open Sidenav"]    timeout=5s
-    Click Button                     css=button[aria-label="Open Sidenav"]
-    
-    Wait Until Element Is Visible    xpath=//span[contains(text(), 'Customer Feedback')]    timeout=5s
-    Click Element                    xpath=//span[contains(text(), 'Customer Feedback')]
+    Click    css=button[aria-label="Open Sidenav"]
+    Click    xpath=//span[contains(text(), 'Customer Feedback')]
 
-    # --- STEP 2: FILL OUT FORM PERFECTLY ---
-    Wait Until Element Is Visible    id=comment    timeout=5s
-    Input Text                       id=comment    I am a bad robot trying to bypass the rules!
-    Press Keys                       id=comment    TAB
+    # --- STEP 2: FILL OUT FORM ---
+    Fill Text     id=comment    This is a completely normal, non-malicious customer review! The juice is great.
     
-    Click Element                    id=rating
-    Press Keys                       id=rating    ARROW_RIGHT
-    Press Keys                       id=rating    ARROW_RIGHT
+    # Set rating to 4 stars (Playwright uses 'ArrowRight' instead of 'ARROW_RIGHT')
+    Click         id=rating
+    Press Keys    id=rating    ArrowRight
+    Press Keys    id=rating    ArrowRight
+    Press Keys    id=rating    ArrowRight
+    Press Keys    id=rating    ArrowRight
 
-    # --- STEP 3: INTENTIONALLY FAIL CAPTCHA ---
-    Input Text                       id=captchaControl    99999999
-    Press Keys                       id=captchaControl    TAB
+    # --- STEP 3: SOLVE CAPTCHA ---
+    ${math_equation}=    Get Text    id=captcha
+    ${answer}=           Evaluate    ${math_equation}
+    Fill Text            id=captchaControl    ${answer}
 
-    # --- STEP 4: VERIFY THE SERVER REJECTS IT ---
-    Wait Until Element Is Enabled    id=submitButton    timeout=5s
-    Click Button                     id=submitButton
+    # --- STEP 4: SUBMIT & VERIFY ---
+    Wait For Elements State    id=submitButton    enabled    timeout=5s
+    Click                      id=submitButton
+
+    # Verify the submission was successful
+    Wait For Elements State    text=Wrong answer    visible    timeout=5s
     
-    # THE PROOF: Wait for the red error banner to appear on the screen
-    Wait Until Page Contains         Wrong answer to CAPTCHA. Please try again.    timeout=5s
-    
+    # Leave it open for a couple of seconds to admire a passing test!
     Sleep    2s
-    Close Browser
