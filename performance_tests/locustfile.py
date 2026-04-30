@@ -20,6 +20,12 @@ class JuiceShopShopper(HttpUser):
         # We use catch_response=True because a 401 Unauthorized is an expected 
         # application response, not a server crash. We only want Locust to 
         # report a 'Failure' if the server physically drops the connection or throws a 500.
+        # NOTE:
+        # Install the Locust package:  # pip install locust
+        # Update your requirements.txt file: # pip freeze > requirements.txt
+        # Run the test with: locust -f performance_tests/locustfile.py
+
+
         with self.client.post("/rest/user/login", json=payload, catch_response=True) as response:
             if response.status_code in [200, 401]:
                 response.success()
