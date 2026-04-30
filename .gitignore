@@ -7,3 +7,5 @@ results/
 *.xml
 playwright-log.txt
 browser/
+__pycache__/
+*.pyc
