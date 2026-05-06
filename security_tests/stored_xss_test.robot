@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation    Happy path test for Customer Feedback submission.
+# We are testing for Cross-Site Scripting (XSS), ensuring hackers can't inject malicious JavaScript into the Juice Shop to steal other users' cookies.
 Library          SeleniumLibrary
 
 *** Variables ***

@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation    API Testing: Broken Access Control (IDOR) on Juice Shop
+# Insecure Direct Object Reference (IDOR). This is a massive API vulnerability where a user 
+# simply changes an ID in the URL (like user_id=1 to user_id=2) to illegally view someone else's private data.
 Library          RequestsLibrary
 Library          Collections
 

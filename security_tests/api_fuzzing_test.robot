@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation    API Fuzzing: Data-Driven SQL Injection Testing
+# Fuzzing is an advanced technique where you throw massive amounts of random, garbage data at an API just to see if it panics and crashes.
 Library          RequestsLibrary
 Library          Collections
 # This tells Robot Framework to use our custom keyword as a loop for every test case below!
