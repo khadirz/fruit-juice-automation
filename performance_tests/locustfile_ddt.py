@@ -39,7 +39,7 @@ class JuiceShopShopper(HttpUser):
     # The number (1) is the weight. Since the login task has a weight of (5),
     # Locust will pick the login task 5 times more often than the homepage task.
 
-    @task(1)
+    @task(1) #Decorator that marks this method as a task with a weight of 1
     def load_homepage(self):
         """Simulates light background traffic on the root URL."""
         self.client.get("/")

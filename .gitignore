@@ -9,3 +9,4 @@ playwright-log.txt
 browser/
 __pycache__/
 *.pyc
+.DS_Store
