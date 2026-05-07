@@ -7,6 +7,7 @@ Library          Collections
 Test Template    Verify API Rejects Malicious Login
 
 *** Variables ***
+# The base URL of the Juice Shop API using Google Cloud Run
 ${BASE_URL}      https://juice-shop-104226998836.us-central1.run.app/
 
 *** Keywords ***
