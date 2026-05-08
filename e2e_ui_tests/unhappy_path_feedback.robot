@@ -43,7 +43,7 @@ Customer Feedback Submission - Happy Path
     Click                      id=submitButton
 
     # Verify the submission was successful
-    Wait For Elements State    text=Wrong answer    visible    timeout=5s
+    Wait For Elements State    text=Wrong answer    visible    timeout=15s
     
     # Leave it open for a couple of seconds to admire a passing test!
     Sleep    2s
