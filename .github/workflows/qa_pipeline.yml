@@ -43,9 +43,9 @@ jobs:
       continue-on-error: true  # <--- ADD THIS LINE
       run: robot -d results security_tests/api_fuzzing_test.robot
 
-    # Step F: Run the UI Tests
+    # Step F: Run the UI Tests with a virtual monitor
     - name: Run Playwright UI Tests
-      run: robot -d results e2e_ui_tests/
+      run: xvfb-run robot -d results e2e_ui_tests/
 
     # Step G: Run the Headless Performance Test (Scaled down for pipeline execution)
     - name: Run Locust Performance Test
