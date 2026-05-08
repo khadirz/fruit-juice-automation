@@ -51,6 +51,14 @@ jobs:
         target: 'https://juice-shop-104226998836.us-central1.run.app'
         fail_action: false
 
+    # Step E.3: Save the ZAP Security Report
+    - name: Upload ZAP Security Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: zap-security-report
+        path: report_html.html
+
     # Step F: Run the UI Tests with a virtual monitor
     - name: Run Playwright UI Tests
       run: xvfb-run robot -d results e2e_ui_tests/
