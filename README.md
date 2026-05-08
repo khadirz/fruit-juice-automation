@@ -2,74 +2,78 @@
 
 [![Enterprise QA Pipeline](https://github.com/khadirz/fruit-juice-automation/actions/workflows/qa_pipeline.yml/badge.svg)](https://github.com/khadirz/fruit-juice-automation/actions/workflows/qa_pipeline.yml)
 
-This repository contains an enterprise-grade Quality Assurance (QA) framework...
-An enterprise-grade Continuous Testing framework for the OWASP Juice Shop application. This repository contains automated API tests, security vulnerability checks (Fuzzing, BFLA, XSS, IDOR), and End-to-End (E2E) UI Customer Journey tests powered by Robot Framework.
+An enterprise-grade Continuous Testing framework for the OWASP Juice Shop application. This repository contains automated API tests, security vulnerability checks (Fuzzing, BFLA, XSS, IDOR), Performance load testing, and End-to-End (E2E) UI Customer Journey tests powered by Robot Framework and GitHub Actions.
 
 ## 📂 1. Framework Structure
+* `.github/workflows/` - CI/CD pipeline configurations (GitHub Actions).
 * `/api_tests` - Functional backend API validations.
 * `/e2e_ui_tests` - Customer journey UI tests powered by Robot Framework `BrowserLibrary` (Playwright).
+* `/performance_tests` - Distributed load testing scripts utilizing `Locust`.
 * `/security_tests` - Automated security auditing and vulnerability exploitation scripts.
 * `/results` - Local directory for HTML reports and logs (Ignored by Git).
 
 ---
 
-## 🛠️ 2. Environment Setup
+## ☁️ 2. Environments
 
-### A. The Target Application (OWASP Juice Shop)
-We run the vulnerable target application locally using Docker.
-* `docker pull bkimminich/juice-shop`: Downloads the application image.
-* `docker run --rm -p 3000:3000 bkimminich/juice-shop`: Starts the app on `http://localhost:3000`.
+### A. Staging Environment (Cloud)
+The primary target for our CI/CD pipeline is a live staging deployment hosted on Google Cloud Run:
+`https://juice-shop-104226998836.us-central1.run.app`
 
-### B. The Local Testing Environment (Python)
-To run tests locally (outside of Docker), we use isolated Python Virtual Environments to prevent dependency conflicts.
-1. `python3 -m venv .venv`: Creates the isolated bucket.
-2. `source .venv/bin/activate`: Activates the environment (crucial for Mac/Linux).
-3. `pip install -r requirements.txt`: Installs Robot Framework and BrowserLibrary.
-4. `rfbrowser init`: Downloads the required browser binaries for local UI testing.
+### B. Local Debug Environment (Docker)
+If you wish to test locally without hitting the cloud server, you can spin up the application via Docker:
+* `docker pull bkimminich/juice-shop`
+* `docker run --rm -p 3000:3000 bkimminich/juice-shop`
+*(Note: You will need to change the `${URL}` variable in the test files to `http://localhost:3000`)*
 
 ---
 
-## 🐳 3. Running UI Tests in Docker
-Because `BrowserLibrary` requires complex Linux graphical dependencies and Node.js, the safest and most reliable way to execute our E2E tests is inside a pre-configured Docker container.
+## 🛠️ 3. Local Setup & Execution
+To run tests locally, use an isolated Python Virtual Environment:
+1. `python3 -m venv .venv`
+2. `source .venv/bin/activate` (Mac/Linux)
+3. `pip install -r requirements.txt`
+4. `rfbrowser init` (Downloads Playwright browser binaries)
 
-**1. Build the Test Image:**
-Run this from the root directory to build our custom testing container:
-`docker build -t juice-shop-e2e .`
-
-**2. Execute the Tests:**
-Run the container and extract the test reports to your local machine using a volume mount:
-`docker run --rm -v $(pwd)/results:/app/results juice-shop-e2e`
-
-*Note: We use `FROM marketsquare/robotframework-browser:latest` as our base Docker image because it comes pre-installed with the correct Node.js version and browser binaries.*
+**Execution Commands:**
+* **UI Tests:** `robot -d results e2e_ui_tests/`
+* **API/Security Tests:** `robot -d results security_tests/`
+* **Performance Tests:** `locust -f performance_tests/locustfile_ddt.py --headless -u 50 -r 10 -t 15s`
 
 ---
 
-## 🛡️ 4. Security Testing Concepts
+## 🤖 4. CI/CD Pipeline (GitHub Actions)
+This repository utilizes GitHub Actions for continuous integration. Upon every push to the `main` branch, an ephemeral Ubuntu server is provisioned to:
+1. Install Python, Playwright, and dependencies.
+2. Execute Security & API fuzzing against the cloud endpoint.
+3. Simulate an X-Server display using `xvfb-run` to execute headed Playwright UI tests in a headless Linux environment.
+4. Execute Locust performance smoke tests.
+5. Upload all HTML test reports as downloadable GitHub Artifacts.
+
+---
+
+## 🛡️ 5. Security Testing Concepts
 * **SQL Injection (SQLi):** Manipulating a database query by entering code into input fields (e.g., `' OR 1=1 --`).
 * **Broken Function Level Authorization (BFLA):** Testing if a standard user can access admin-only API endpoints.
-* **Insecure Direct Object Reference (IDOR):** Testing if a user can steal another user's data by simply changing an ID number in the API request (e.g., `/api/Basket/1` to `/api/Basket/2`).
-* **Cross-Site Scripting (XSS):** Injecting malicious JavaScript into inputs. *Stored XSS* is highly dangerous because the script is saved to the database and attacks every user who views that page.
-* **User Enumeration:** When an app leaks whether an email exists (e.g., "Email must be unique").
-* **Rate Limiting:** A defense that blocks a user after too many failed login attempts to prevent Brute Force attacks.
+* **Insecure Direct Object Reference (IDOR):** Testing if a user can steal another user's data by modifying an ID in the request.
+* **Cross-Site Scripting (XSS):** Injecting malicious JavaScript into inputs.
+* **User Enumeration:** Identifying system behavior that leaks whether an account exists.
 
 ---
 
-## 🤖 5. Robot Framework & UI Guidelines
-* **Syntax Structure:**
-    * `*** Settings ***`: Imports libraries and documentation.
-    * `*** Variables ***`: Stores reusable data (URLs, browser types).
-    * `*** Test Cases ***`: The high-level "what" of the test.
-* **Headless Mode:** When debugging locally, set `headless=False` to watch the browser. **Crucial:** Before building the Docker image or running in CI/CD, you MUST change it back to `headless=True`, or the container will crash!
-* **Dynamic Locators:** OWASP Juice Shop uses Angular Material. Do not trust auto-generated IDs like `mat-input-0`. Always use structural CSS selectors or static IDs (like `id=searchQuery`).
+## 📚 6. Framework Syntax & Version Control
 
----
+### A. Robot Framework Structure
+* `*** Settings ***`: Imports libraries (like `Browser`) and suite documentation.
+* `*** Variables ***`: Stores reusable environment data (URLs, browser configurations).
+* `*** Test Cases ***`: The high-level execution steps of the test.
+* **Headless Rule:** Playwright requires a virtual display to run headed tests on a Linux server. In our CI/CD pipeline, we handle this automatically using `xvfb-run`.
 
-## 🌿 6. Version Control (Git) Cheat Sheet
-1.  `git status`: Check what has changed.
-2.  `git add .`: Stage all non-ignored files for saving.
-3.  `git commit -m "Message"`: Take a permanent snapshot.
-4.  `git push`: Upload to GitHub.
-*(Note: Ensure your `.gitignore` contains `results/`, `.venv/`, and `browser/` so you don't upload massive or temporary files).*
+### B. Git Version Control Cheat Sheet
+* `git status`: Check modified files.
+* `git add .`: Stage all non-ignored files for saving.
+* `git commit -m "Message"`: Take a permanent snapshot of the code.
+* `git push`: Upload to GitHub and trigger the automated CI/CD pipeline.
 
 ---
 
