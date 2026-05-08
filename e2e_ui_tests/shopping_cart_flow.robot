@@ -4,7 +4,7 @@ Library          Browser    timeout=30s
 Library          String
 
 *** Variables ***
-${URL}           http://localhost:3000/
+${URL}           https://juice-shop-104226998836.us-central1.run.app
 
 *** Test Cases ***
 Registered User Can Add Item To Basket

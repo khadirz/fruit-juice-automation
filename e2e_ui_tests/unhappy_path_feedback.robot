@@ -3,7 +3,7 @@ Documentation    Happy path test for Customer Feedback submission.
 Library          Browser    timeout=30s
 
 *** Variables ***
-${URL}           http://localhost:3000/
+${URL}           https://juice-shop-104226998836.us-central1.run.app
 
 *** Test Cases ***
 Customer Feedback Submission - Happy Path
