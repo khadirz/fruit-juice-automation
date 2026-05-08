@@ -1,5 +1,8 @@
 # 🚀 Full-Stack Testing & Automation Framework
 
+[![Enterprise QA Pipeline](https://github.com/khadirz/fruit-juice-automation/actions/workflows/qa_pipeline.yml/badge.svg)](https://github.com/khadirz/fruit-juice-automation/actions/workflows/qa_pipeline.yml)
+
+This repository contains an enterprise-grade Quality Assurance (QA) framework...
 An enterprise-grade Continuous Testing framework for the OWASP Juice Shop application. This repository contains automated API tests, security vulnerability checks (Fuzzing, BFLA, XSS, IDOR), and End-to-End (E2E) UI Customer Journey tests powered by Robot Framework.
 
 ## 📂 1. Framework Structure
