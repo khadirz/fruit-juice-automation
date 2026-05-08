@@ -43,6 +43,14 @@ jobs:
       continue-on-error: true  # <--- ADD THIS LINE
       run: robot -d results security_tests/api_fuzzing_test.robot
 
+    # Step E.2: Run OWASP ZAP Dynamic Security Scan
+    - name: OWASP ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.12.0
+      continue-on-error: true
+      with:
+        target: 'https://juice-shop-104226998836.us-central1.run.app'
+        fail_action: false
+
     # Step F: Run the UI Tests with a virtual monitor
     - name: Run Playwright UI Tests
       run: xvfb-run robot -d results e2e_ui_tests/
