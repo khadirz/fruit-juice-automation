@@ -33,7 +33,9 @@ jobs:
 
     # Step D: Download the browser binaries so Playwright can actually open pages
     - name: Install Playwright Browsers
-      run: playwright install --with-deps chromium
+      run: |
+        pip install playwright
+        playwright install --with-deps chromium
 
     # Step E: Run the Security / API Tests against the Cloud URL
     - name: Run API & Security Tests
