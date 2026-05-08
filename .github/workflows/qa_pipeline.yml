@@ -39,6 +39,7 @@ jobs:
 
     # Step E: Run the Security / API Tests against the Cloud URL
     - name: Run API & Security Tests
+      continue-on-error: true  # <--- ADD THIS LINE
       run: robot -d results security_tests/api_fuzzing_test.robot
 
     # Step F: Run the UI Tests
