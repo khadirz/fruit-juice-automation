@@ -1,0 +1,57 @@
+name: Enterprise QA Pipeline
+
+# 1. THE TRIGGER: When does this run?
+# This tells the robot to wake up every time code is pushed to the 'main' branch.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# 2. THE ENVIRONMENT: What computer are we renting?
+jobs:
+  test-suite:
+    runs-on: ubuntu-latest # We are renting a fresh Linux server from GitHub
+
+    steps:
+    # Step A: Download our repository code onto the Linux server
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Step B: Install Python on the server
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # Step C: Install all our testing tools (Playwright, Locust, Robot Framework)
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install robotframework-requests
+
+    # Step D: Download the browser binaries so Playwright can actually open pages
+    - name: Install Playwright Browsers
+      run: playwright install --with-deps chromium
+
+    # Step E: Run the Security / API Tests against the Cloud URL
+    - name: Run API & Security Tests
+      run: robot -d results security_tests/api_fuzzing_test.robot
+
+    # Step F: Run the UI Tests
+    - name: Run Playwright UI Tests
+      run: robot -d results e2e_ui_tests/
+
+    # Step G: Run the Headless Performance Test (Scaled down for pipeline execution)
+    - name: Run Locust Performance Test
+      run: locust -f performance_tests/locustfile_ddt.py --headless -u 50 -r 10 -H https://juice-shop-104226998836.us-central1.run.app -t 15s --html results/locust_report.html
+
+    # Step H: Save the test results so we can download them from GitHub later
+    - name: Upload Test Artifacts
+      uses: actions/upload-artifact@v4
+      if: always() # This ensures reports are uploaded even if a test fails!
+      with:
+        name: qa-test-reports
+        path: results/
+        retention-days: 7
