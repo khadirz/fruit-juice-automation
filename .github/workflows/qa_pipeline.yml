@@ -31,11 +31,12 @@ jobs:
         pip install -r requirements.txt
         pip install robotframework-requests
 
-    # Step D: Download the browser binaries so Playwright can actually open pages
-    - name: Install Playwright Browsers
+    # Step D: Download the browser binaries and initialize Robot Framework Browser
+    - name: Install Playwright & RF Browser Dependencies
       run: |
         pip install playwright
         playwright install --with-deps chromium
+        rfbrowser init
 
     # Step E: Run the Security / API Tests against the Cloud URL
     - name: Run API & Security Tests
