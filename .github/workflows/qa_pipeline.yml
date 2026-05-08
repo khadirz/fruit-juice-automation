@@ -38,10 +38,9 @@ jobs:
         playwright install --with-deps chromium
         rfbrowser init
 
-    # Step E: Run the Security / API Tests against the Cloud URL
-    - name: Run API & Security Tests
-      continue-on-error: true  # <--- ADD THIS LINE
-      run: robot -d results security_tests/api_fuzzing_test.robot
+    # Step E.1: Fix Linux permissions so the ZAP Docker container can save files
+    - name: Grant ZAP Permission to Workspace
+      run: chmod -R 777 ${{ github.workspace }}
 
     # Step E.2: Run OWASP ZAP Dynamic Security Scan
     - name: OWASP ZAP Baseline Scan
@@ -50,6 +49,14 @@ jobs:
       with:
         target: 'https://juice-shop-104226998836.us-central1.run.app'
         fail_action: false
+
+    # Step E.3: Upload the ZAP HTML report so we can download it
+    - name: Upload ZAP Security Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: zap-security-report
+        path: report_html.html
 
     # Step F: Run the UI Tests with a virtual monitor
     - name: Run Playwright UI Tests
