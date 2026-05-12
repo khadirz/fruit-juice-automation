@@ -1,6 +1,10 @@
 pipeline {
     // 1. The Execution Environment
-    agent any 
+    agent {
+    docker { 
+        image 'mcr.microsoft.com/playwright/python:v1.40.0-jammy' 
+    }
+    }
 
     // 2. Global Variables
     environment {
